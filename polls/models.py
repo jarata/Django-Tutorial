@@ -15,7 +15,7 @@ class Question(models.Model):  # Step 2.3
         return self.question_text
     
     def was_published_recently(self):  # Step 2.7
-        return self.pub_date >= timezone.now()
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
 
 class Choice(models.Model):  # Step 2.3

@@ -4,9 +4,14 @@ from django.shortcuts import render
 # Step 1.1
 from django.http import HttpResponse
 
+from .models import Question
+
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    # Step 3.3
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    output = ', '.join([q.question_text for q in latest_question_list])
+    return HttpResponse(output)
 
 
 # Step 3.1

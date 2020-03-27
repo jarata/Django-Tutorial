@@ -8,8 +8,17 @@ from .models import Question
 
 
 # Create your tests here.
-class QuestionModelTests(TestCase):
+def create_question(question_text, days):
+    """
+    create a question with the given `question_text` and published the
+    given number of `days` offset to now (negative for questions published
+    in the past, positive for questions that have yet to be published).
+    """
+    time = timezone.now() + datetime.timedelta(days=days)
+    return Question.objects.create(question_text=question_text, pub_date=time)
 
+
+class QuestionModelTests(TestCase):
     def test_was_published_recently_with_future_question(self):
         """
         was_published_recently() returns False for questions whose pub_date
@@ -37,19 +46,8 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
         
-        
-def create_question(question_text, days):
-    """
-    create a question with the given `question_text` and published the
-    given number of `days` offset to now (negative for questions published
-    in the past, positive for questions that have yet to be published).
-    """
-    time = timezone.now() + datetime.timedelta(days=days)
-    return Question.objects.create(question_text=question_text, pub_date=time)
-
 
 class QuestionIndexViewTests(TestCase):
-    
     def test_no_questions(self):
         """
         if no questions exist, an appropriate message is displayed.
@@ -108,7 +106,6 @@ class QuestionIndexViewTests(TestCase):
         
         
 class QuestionDetailViewTests(TestCase):
-    
     def test_future_question(self):
         """
         the detail view of a question with a pub_date in the future
